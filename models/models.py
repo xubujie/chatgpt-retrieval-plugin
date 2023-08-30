@@ -4,21 +4,25 @@ from enum import Enum
 
 
 class Source(str, Enum):
-    email = "email"
-    file = "file"
+    bu = "bu"
+    domain = "domain"
+    lessonlearn = "lessonlearn"
+    ccc = "ccc"
+    external = "external"
     chat = "chat"
 
 
 class DocumentMetadata(BaseModel):
     source: Optional[Source] = None
     source_id: Optional[str] = None
-    url: Optional[str] = None
+    filename: Optional[str] = None
+    blob_url: Optional[str] = None
     created_at: Optional[str] = None
-    author: Optional[str] = None
+    contact_person: Optional[str] = None
 
 
 class DocumentChunkMetadata(DocumentMetadata):
-    document_id: Optional[str] = None
+    page: Optional[str] = None
 
 
 class DocumentChunk(BaseModel):
@@ -46,7 +50,7 @@ class DocumentMetadataFilter(BaseModel):
     document_id: Optional[str] = None
     source: Optional[Source] = None
     source_id: Optional[str] = None
-    author: Optional[str] = None
+    contact_person: Optional[str] = None
     start_date: Optional[str] = None  # any date string format
     end_date: Optional[str] = None  # any date string format
 
