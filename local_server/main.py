@@ -21,7 +21,6 @@ from starlette.responses import FileResponse
 from models.models import DocumentMetadata, Source
 from fastapi.middleware.cors import CORSMiddleware
 
-
 app = FastAPI()
 
 PORT = 3333
