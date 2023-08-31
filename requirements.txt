@@ -163,3 +163,4 @@ pymupdf
 unstructured~=0.10.10
 langdetect
 ptvsd
+lightgbm
