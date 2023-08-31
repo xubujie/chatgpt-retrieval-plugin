@@ -4,11 +4,7 @@ from enum import Enum
 
 
 class Source(str, Enum):
-    bu = "bu"
-    domain = "domain"
-    lessonlearn = "lessonlearn"
-    ccc = "ccc"
-    external = "external"
+    cips = "cips"
     chat = "chat"
 
 
@@ -19,9 +15,11 @@ class DocumentMetadata(BaseModel):
     blob_url: Optional[str] = None
     created_at: Optional[str] = None
     contact_person: Optional[str] = None
+    summary: Optional[str] = None
 
 
 class DocumentChunkMetadata(DocumentMetadata):
+    document_id: Optional[str] = None
     page: Optional[str] = None
 
 
