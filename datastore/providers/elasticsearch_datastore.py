@@ -92,11 +92,12 @@ class ElasticsearchDataStore(DataStore):
     async def _query(
         self,
         queries: List[QueryWithEmbedding],
+        query_type: str = "semantic",
     ) -> List[QueryResult]:
         """
         Takes in a list of queries with embeddings and filters and returns a list of query results with matching document chunks and scores.
         """
-        searches = self._convert_queries_to_msearch_query(queries)
+        searches = self._convert_queries_to_msearch_query(queries, query_type)
         results = self.client.msearch(searches=searches)
         return [
             QueryResult(
@@ -218,23 +219,34 @@ class ElasticsearchDataStore(DataStore):
 
         return [action_and_metadata, source]
 
-    def _convert_queries_to_msearch_query(self, queries: List[QueryWithEmbedding]):
+    def _convert_queries_to_msearch_query(
+        self, queries: List[QueryWithEmbedding], query_type: str
+    ):
         searches = []
 
         for query in queries:
             searches.append({"index": self.index_name})
-            searches.append(
-                {
-                    "_source": True,
-                    "knn": {
-                        "field": "embedding",
-                        "query_vector": query.embedding,
-                        "k": query.top_k,
-                        "num_candidates": query.top_k,
-                    },
-                    "size": query.top_k,
-                }
-            )
+            if query_type == "semantic":
+                searches.append(
+                    {
+                        "_source": True,
+                        "knn": {
+                            "field": "embedding",
+                            "query_vector": query.embedding,
+                            "k": query.top_k,
+                            "num_candidates": query.top_k,
+                        },
+                        "size": query.top_k,
+                    }
+                )
+            elif query_type == "keyword":
+                searches.append(
+                    {
+                        "_source": True,
+                        "query": {"match": {"text": query.query}},
+                        "size": query.top_k,
+                    }
+                )
 
         return searches
 

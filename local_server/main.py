@@ -113,6 +113,19 @@ async def query_main(request: QueryRequest = Body(...)):
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
+@app.post("/keyword_query", response_model=QueryResponse)
+async def query_keyword(request: QueryRequest = Body(...)):
+    try:
+        results = await datastore.query(
+            request.queries,
+            query_type="keyword",
+        )
+        return QueryResponse(results=results)
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
+
+
 @app.delete(
     "/delete",
     response_model=DeleteResponse,
